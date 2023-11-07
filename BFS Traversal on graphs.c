@@ -37,7 +37,7 @@ void add_edge(int vertex, int value, int weight) {
 
 void print_adjacency_list(int size) {
     for (int i = 0; i < size; i++) {
-        printf("for V%d", i + 1);
+        printf("for V%d", i+1 );
         if (adj_list[i] != NULL) {
             struct node* temp = adj_list[i];
             while (temp != NULL) {
@@ -51,12 +51,49 @@ void print_adjacency_list(int size) {
     }
 }
 
+
+int stack[100];
+int top =-1;
+bool is_stack_full()
+{
+    if(top == 100)
+    return true;
+    else
+    return false;
+}
+void push(int n)
+{
+    if(!(is_stack_full()))
+    {
+        stack[++top]=n;
+    }
+
+}
+bool is_stack_empty()
+{
+    if(top == -1)
+    return true;
+    else
+    return false;
+}
+int pop()
+{
+    if(!(is_stack_empty()))
+    {
+        return stack[top--];
+    }
+    else
+    {
+        printf("The stack is empty\n");
+    }
+
+}
 int queue[9] = {0};
 int rear = -1;
 int front = -1;
 
 bool is_full() {
-    if (front == 9)
+    if (front == 8)
         return true;
     else
         return false;
@@ -88,7 +125,7 @@ void BFS(int start_vertex, int num_of_vertex) {
     printf("Breadth-First Search starting from vertex: V%d\n", start_vertex + 1);
     while (!is_empty()) {
         int current = dequeue();
-        printf("Visited V%d\n", current + 1);
+        printf("Visited V%d\n", current+1);
         struct node* temp = adj_list[current];
         while (temp != NULL) {
             int adj_vertex = temp->v;
@@ -101,19 +138,56 @@ void BFS(int start_vertex, int num_of_vertex) {
     }
 }
 
+void DFS(int start_vertex, int num_of_vertex) {
+    bool visited[num_of_vertex];
+    for (int i = 0; i < num_of_vertex; i++) {
+        visited[i] = false;
+    }
+    push(start_vertex);
+    visited[start_vertex]=true;
+    printf("Depth-First Search starting from vertex V%d\n", start_vertex + 1);
+
+    while (!is_stack_empty()) {
+        int current = pop();
+        if (!(visited[current])) {
+            visited[current] = true;
+            printf("Visited V%d\n", current + 1);
+        }
+
+        struct node* temp = adj_list[current];
+        while (temp != NULL) {
+            int adj_vertex = temp->v;
+            if (!visited[adj_vertex]) {
+                push(adj_vertex);
+            }
+            temp = temp->next;
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
 int main() {
     int num_of_vertex = 9;
 
     int adjm[9][9] = {
         {0, 8, 10, 3, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 6, 5, 4, 0, 0},
-        {0, 0, 0, 0, 0, 5, 3, 0, 0},
-        {0, 0, 0, 0, 0, 0, 4, 2, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 12},
-        {0, 0, 0, 0, 7, 0, 1, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 11, 1},
-        {0, 0, 1, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {8, 0, 0, 0, 6, 5, 4, 0, 0},
+        {10, 0, 0, 0, 0, 5, 3, 0, 0},
+        {3, 0, 0, 0, 0, 0, 4, 2, 0},
+        {0, 6, 0, 0, 0, 0, 0, 0, 12},
+        {0, 5, 0, 0, 7, 0, 1, 0, 0},
+        {0, 4, 3, 4, 0, 1, 0, 11, 1},
+        {0, 0, 1, 0, 0, 0, 11, 0, 0},
+        {0, 0, 0, 0, 0, 12, 1, 0, 0}
+
     };
 
     for (int i = 0; i < num_of_vertex; i++) {
@@ -125,7 +199,8 @@ int main() {
     }
 
     print_adjacency_list(num_of_vertex);
-    BFS(0, num_of_vertex);
+    BFS(5, num_of_vertex);
+    DFS(0, num_of_vertex);
 
     return 0;
 }
